@@ -50,7 +50,6 @@ else
 fi
 quitIfFailed "Flashpoint"
 
-clear
 echo "Flashpoint has been installed to your Applications folder."
 echo "If you want to open Flashpoint now, press Enter. Otherwise, press Control-C."
 read
