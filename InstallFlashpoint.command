@@ -18,6 +18,8 @@ if test ! $(which brew); then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     quitIfFailed "Homebrew"
+else
+	brew update
 fi
 
 # Homebrew doesn't seem to honor --no-quarantine for cask dependencies,
@@ -35,12 +37,12 @@ if ! [ -e /Applications/Flashpoint/Flashpoint.app ]; then
 	echo "Installing Flashpoint..."
 	brew install --no-quarantine FlashpointProject/flashpoint/flashpoint-infinity
 else
-	if [ "$(brew outdated flashpoint-infinity)" == "flashpoint-infinity" ]; then
+	if [ "$(brew outdated FlashpointProject/flashpoint/flashpoint-infinity)" == "flashpoint-infinity" ]; then
 		echo "A Flashpoint update is available! Do you want to install it now?"
 		echo "Don't forget to back up your custom playlists before you continue!"
 		echo "Press Enter to install the update, or press Control-C to cancel."
 		read
-		brew upgrade --no-quarantine flashpoint-infinity
+		brew upgrade --no-quarantine FlashpointProject/flashpoint/flashpoint-infinity
 	else
 		echo "The latest version of Flashpoint is already installed."
 		exit
