@@ -20,6 +20,17 @@ if test ! $(which brew); then
     quitIfFailed "Homebrew"
 fi
 
+# Homebrew doesn't seem to honor --no-quarantine for cask dependencies,
+# so install them manually first
+if ! [ -e /Applications/Chromium.app ]; then
+	brew install --no-quarantine eloston-chromium
+	quitIfFailed "Chromium"
+fi
+if ! [ -e "/Applications/Waterfox Classic.app" ]; then
+	brew install --no-quarantine waterfox-classic
+	quitIfFailed "Waterfox Classic"
+fi
+
 if ! [ -e /Applications/Flashpoint/Flashpoint.app ]; then
 	echo "Installing Flashpoint..."
 	brew install --no-quarantine FlashpointProject/flashpoint/flashpoint-infinity
