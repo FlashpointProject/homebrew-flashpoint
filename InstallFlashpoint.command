@@ -11,7 +11,7 @@ quitIfFailed() {
 
 clear
 echo "Welcome to the Flashpoint installer!"
-echo "Press Enter to begin, or press Ctrl-C to cancel the installation."
+echo "Press Enter to begin, or press Control-C to cancel the installation."
 read
 
 if test ! $(which brew); then
@@ -24,16 +24,14 @@ if ! [ -e /Applications/Flashpoint/Flashpoint.app ]; then
 	echo "Installing Flashpoint..."
 	brew install --no-quarantine FlashpointProject/flashpoint/flashpoint-infinity
 else
-	echo "Flashpoint is installed. Do you want to update Flashpoint now?"
-	echo "Don't forget to back up your custom playlists first!"
-	echo "For more info, copy and paste this link into your browser:"
-	echo "https://bluemaxima.org/flashpoint/datahub/Mac_Support#Updating_Flashpoint"
-	echo "Type y or n:"
-	read choice
-	if [ $choice == "y" ]; then
+	if [ "$(brew outdated flashpoint-infinity)" == "flashpoint-infinity" ]; then
+		echo "A Flashpoint update is available! Do you want to install it now?"
+		echo "Don't forget to back up your custom playlists before you continue!"
+		echo "Press Enter to install the update, or press Control-C to cancel."
+		read
 		brew upgrade --no-quarantine flashpoint-infinity
 	else
-		echo "Exiting the Flashpoint installer."
+		echo "The latest version of Flashpoint is already installed."
 		exit
 	fi
 fi
@@ -41,6 +39,6 @@ quitIfFailed "Flashpoint"
 
 clear
 echo "Flashpoint has been installed to your Applications folder."
-echo "If you want to open Flashpoint now, press Enter. Otherwise, press Ctrl-C."
+echo "If you want to open Flashpoint now, press Enter. Otherwise, press Control-C."
 read
 open /Applications/Flashpoint/Flashpoint.app
