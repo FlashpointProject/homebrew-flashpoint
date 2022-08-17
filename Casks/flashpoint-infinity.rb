@@ -7,11 +7,11 @@ cask "flashpoint-infinity" do
 	desc "A playable webgame library and archive. The Infinity edition allows downloading each piece of media on demand."
 	homepage "https://bluemaxima.org/flashpoint/"
 
-	depends_on "php"
-	depends_on "qemu"
-	depends_on "eloston-chromium"
-	depends_on "waterfox-classic"
-	depends_on "gcenx/wine/wine-crossover"
+	depends_on formula: "php"
+	depends_on formula: "qemu"
+	depends_on cask: "eloston-chromium"
+	depends_on cask: "waterfox-classic"
+	depends_on cask: "gcenx/wine/wine-crossover"
 
 	suite "Flashpoint"
 end
