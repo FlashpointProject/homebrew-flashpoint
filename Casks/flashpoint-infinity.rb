@@ -1,5 +1,5 @@
 cask "flashpoint-infinity" do
-	version "0.3"
+	version "0.4"
 	sha256 "3648a788441244dcde4c6aaa94f09264460564dae927f0f2f838a699420398f5"
 
 	url "http://localhost:8000/Flashpoint11InfinityMac.7z"
