@@ -32,6 +32,10 @@ if ! [ -e "/Applications/Waterfox Classic.app" ]; then
 	brew install --no-quarantine waterfox-classic
 	quitIfFailed "Waterfox Classic"
 fi
+if ! [ -e "/Applications/Wine Crossover.app" ]; then
+	brew install --no-quarantine gcenx/wine/wine-crossover
+	quitIfFailed "Wine"
+fi
 
 if ! [ -e /Applications/Flashpoint/Flashpoint.app ]; then
 	echo "Installing Flashpoint..."
