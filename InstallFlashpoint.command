@@ -69,10 +69,9 @@ if test ! $(which brew); then
 	if test ! $(which brew); then
 		addBrewToPATH
 	fi
-else
-	brew update
-	quitIfFailed "an update for Homebrew"
 fi
+brew update
+quitIfFailed "an update for Homebrew"
 
 # Homebrew doesn't seem to honor --no-quarantine for cask dependencies,
 # so install them manually first
