@@ -114,7 +114,9 @@ if ! [ -e "/Applications/Waterfox Classic.app" ]; then
 	brew install --no-quarantine waterfox-classic
 	quitIfFailed "Waterfox Classic"
 fi
-installWine
+if test ! $(which wine); then
+	installWine
+fi
 
 if ! [ -e /Applications/Flashpoint/Flashpoint.app ]; then
 	install_cmd="brew install --no-quarantine $repo_path"
