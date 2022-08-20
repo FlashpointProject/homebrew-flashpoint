@@ -1,8 +1,22 @@
 #!/bin/bash
 
+mirror_url="http://archive.org/download/flashpoint-11-infinity-mac/Flashpoint11InfinityMac.7z"
+repo_path="FlashpointProject/flashpoint/flashpoint-infinity"
+
+checkDiskSpace() {
+	space_required_gb=$1
+	free_space=$(df -Pk . | sed 1d | grep -v used | awk '{ print $4 "\t" }')
+	free_space_mb=$((free_space/1024))
+	if [ $free_space_mb -lt ${space_required_gb}000 ]; then
+		echo "Warning: you need at least $space_required_gb gigabytes of free disk space to install Flashpoint."
+		echo "Please clear out some disk space before you continue."
+		echo "Press Return to continue, or press Control-C to cancel the installation."
+		read
+	fi
+}
+
 quitIfFailed() {
-	status=$?
-	if [ $status -gt 0 ]; then
+	if [ $? -gt 0 ]; then
 		echo "Failed to install $1. The Flashpoint installer will now exit."
 		echo "To try again, simply re-run the installer."
 		exit
@@ -33,7 +47,7 @@ getShell() {
 # instead of doing it automatically. So we have to do that ourselves.
 addBrewToPATH() {
 	arch_name="$(uname -m)"
-	if [ $arch_name == "arm64" ]; then
+	if [ $arch_name = "arm64" ]; then
 		homebrew_path="/opt/homebrew/bin"
 	else
 		homebrew_path="/usr/local/bin"
@@ -46,21 +60,38 @@ addBrewToPATH() {
 	echo eval "\$($homebrew_path/brew shellenv)" >> ${shell_profile}
 }
 
+installWine() {
+	# Thanks to https://scriptingosx.com/2017/11/on-the-macos-version/
+	os_ver=$(sw_vers -productVersion)
+	IFS='.' read -r -$read_opt os_ver <<< "$os_ver"
+	if [[ "${os_ver[0]}" -ge 11 ]] || [[ "${os_ver[1]}" -ge 15 ]]; then
+		# Catalina or later
+		brew install --no-quarantine gcenx/wine/wine-crossover
+	elif [[ "${os_ver[1]}" -ge 13 ]]; then
+		# High Sierra or Mojave
+		brew tap homebrew/cask-versions
+		brew install --cask --no-quarantine wine-staging
+	elif [[ "${os_ver[1]}" -le 12 ]]; then
+		# Sierra or below
+		echo "Warning: Wine cannot be installed automatically on this MacOS version (10.${os_ver[1]})"
+	fi
+	quitIfFailed "Wine"
+}
+
+# Download from the Archive.org mirror if the main download failed
+checkDownload() {
+	cache_path="$(brew --cache -s $repo_path)"
+	if ! [ -e "$cache_path" ]; then
+		curl --progress-bar -o "$cache_path" "$mirror_url"
+		quitIfFailed "Flashpoint"
+	fi
+}
+
 clear
 echo "Welcome to the Flashpoint installer!"
-echo "Press Enter to begin, or press Control-C to cancel the installation."
+echo "Press Return to begin, or press Control-C to cancel the installation."
 read
-
-# Check disk space
-space_required_gb=7
-free_space=$(df -Pk . | sed 1d | grep -v used | awk '{ print $4 "\t" }')
-free_space_mb=$((free_space/1024))
-if [ $free_space_mb -lt ${space_required_gb}000 ]; then
-	echo "Warning: you need at least $space_required_gb gigabytes of free disk space to install Flashpoint."
-	echo "Please clear out some disk space before you continue."
-	echo "Press Enter to continue, or press Control-C to cancel the installation."
-	read
-fi
+checkDiskSpace 7
 
 if test ! $(which brew); then
 	echo "Installing Homebrew..."
@@ -83,23 +114,30 @@ if ! [ -e "/Applications/Waterfox Classic.app" ]; then
 	brew install --no-quarantine waterfox-classic
 	quitIfFailed "Waterfox Classic"
 fi
-if ! [ -e "/Applications/Wine Crossover.app" ]; then
-	brew install --no-quarantine gcenx/wine/wine-crossover
-	quitIfFailed "Wine"
-fi
+installWine
 
 if ! [ -e /Applications/Flashpoint/Flashpoint.app ]; then
+	install_cmd="brew install --no-quarantine $repo_path"
 	echo "Installing Flashpoint..."
-	brew install --no-quarantine FlashpointProject/flashpoint/flashpoint-infinity
-	quitIfFailed "Flashpoint"
+	eval $install_cmd
+	if [ $? -gt 0 ]; then
+		checkDownload
+		eval $install_cmd
+		quitIfFailed "Flashpoint"
+	fi
 else
-	if [ "$(brew outdated FlashpointProject/flashpoint/flashpoint-infinity)" == "flashpoint-infinity" ]; then
+	if [ "$(brew outdated $repo_path)" = "flashpoint-infinity" ]; then
+		upgrade_cmd="brew upgrade --no-quarantine $repo_path"
 		echo "A Flashpoint update is available! Do you want to install it now?"
 		echo "Don't forget to back up your custom playlists before you continue!"
-		echo "Press Enter to install the update, or press Control-C to cancel."
+		echo "Press Return to install the update, or press Control-C to cancel."
 		read
-		brew upgrade --no-quarantine FlashpointProject/flashpoint/flashpoint-infinity
-		quitIfFailed "Flashpoint"
+		eval $upgrade_cmd
+		if [ $? -gt 0 ]; then
+			checkDownload
+			eval $upgrade_cmd
+			quitIfFailed "Flashpoint"
+		fi
 	else
 		echo "The latest version of Flashpoint is already installed."
 		exit
@@ -107,6 +145,6 @@ else
 fi
 
 echo "Flashpoint has been installed to your Applications folder."
-echo "If you want to open Flashpoint now, press Enter. Otherwise, press Control-C."
+echo "If you want to open Flashpoint now, press Return. Otherwise, press Control-C."
 read
 open /Applications/Flashpoint/Flashpoint.app

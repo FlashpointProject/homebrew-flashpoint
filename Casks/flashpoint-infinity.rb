@@ -11,7 +11,6 @@ cask "flashpoint-infinity" do
 	depends_on formula: "qemu"
 	depends_on cask: "eloston-chromium"
 	depends_on cask: "waterfox-classic"
-	depends_on cask: "gcenx/wine/wine-crossover"
 
 	suite "Flashpoint"
 end
