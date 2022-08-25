@@ -1,4 +1,5 @@
 #!/bin/bash
+export HOMEBREW_INSTALL_FROM_API=1
 
 quitIfFailed() {
 	if [ $? -gt 0 ]; then
@@ -54,7 +55,7 @@ installBrew() {
 }
 
 installPHP() {
-	brew install --no-quarantine php
+	brew install --formula --no-quarantine php
 	quitIfFailed "PHP"
 }
 
@@ -65,7 +66,7 @@ installWine() {
 	IFS='.' read -r -a os_ver <<< "$os_ver"
 	if [[ "${os_ver[0]}" -ge 11 ]] || [[ "${os_ver[1]}" -ge 15 ]]; then
 		# Catalina or later
-		brew install --no-quarantine gcenx/wine/wine-crossover
+		brew install --cask --no-quarantine gcenx/wine/wine-crossover
 	elif [[ "${os_ver[1]}" -ge 13 ]]; then
 		# High Sierra or Mojave
 		brew tap homebrew/cask-versions
