@@ -1,4 +1,5 @@
 #!/bin/bash
+export HOMEBREW_INSTALL_FROM_API=1
 
 mirror_url="http://archive.org/download/flashpoint-11-infinity-mac/Flashpoint11InfinityMac.7z"
 repo_path="FlashpointProject/flashpoint/flashpoint-infinity"
