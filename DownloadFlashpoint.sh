@@ -18,6 +18,10 @@ checkDiskSpace() {
 checkDiskSpace
 if test ! $(which php); then
 	/bin/bash -c "$(curl -fsSL $install_url)"
+	if [ $? -gt 0 ]; then
+		echo "Failed to install Flashpoint dependencies."
+		exit
+	fi
 fi
 
 cd "$HOME"

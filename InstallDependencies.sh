@@ -3,7 +3,7 @@
 quitIfFailed() {
 	if [ $? -gt 0 ]; then
 		echo "Failed to install $1. See the Flashpoint Wiki for guidance."
-		exit
+		exit 1
 	fi
 }
 
