@@ -63,7 +63,7 @@ addBrewToPATH() {
 installWine() {
 	# Thanks to https://scriptingosx.com/2017/11/on-the-macos-version/
 	os_ver=$(sw_vers -productVersion)
-	IFS='.' read -r -$read_opt os_ver <<< "$os_ver"
+	IFS='.' read -r -a os_ver <<< "$os_ver"
 	if [[ "${os_ver[0]}" -ge 11 ]] || [[ "${os_ver[1]}" -ge 15 ]]; then
 		# Catalina or later
 		brew install --no-quarantine gcenx/wine/wine-crossover
@@ -100,9 +100,10 @@ if test ! $(which brew); then
 	if test ! $(which brew); then
 		addBrewToPATH
 	fi
+else
+	brew update
+	quitIfFailed "an update for Homebrew"
 fi
-brew update
-quitIfFailed "an update for Homebrew"
 
 # Homebrew doesn't seem to honor --no-quarantine for cask dependencies,
 # so install them manually first
