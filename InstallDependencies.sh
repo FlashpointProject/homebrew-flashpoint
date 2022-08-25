@@ -1,5 +1,4 @@
 #!/bin/bash
-export SUDO_ASKPASS=1
 
 quitIfFailed() {
 	if [ $? -gt 0 ]; then
