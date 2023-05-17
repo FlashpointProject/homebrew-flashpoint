@@ -1,6 +1,7 @@
 #!/bin/bash
 # dl_url="https://bluemaxima.org/flashpoint/Flashpoint%2011%20Infinity%20Mac.7z"
-dl_url="https://bluepload.unstable.life/flashpoint1101infinitymac.7z"
+# dl_url="https://bluepload.unstable.life/flashpoint1101infinitymac.7z"
+dl_url="http://archive.org/download/flashpoint-11-infinity-mac/Flashpoint1101InfinityMac.7z"
 dl_filename="Flashpoint 11.0.1 Infinity.7z"
 install_url="https://raw.githubusercontent.com/FlashpointProject/homebrew-flashpoint/main/InstallDependencies.sh"
 
