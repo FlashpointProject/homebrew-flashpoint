@@ -29,7 +29,7 @@ fi
 cd "$HOME"
 mkdir -p Flashpoint && cd Flashpoint
 echo "Downloading Flashpoint..."
-curl -o "$dl_filename" -k --progress-bar $dl_url
+curl --progress-bar -L -k -o "$dl_filename" "$dl_url"
 if [ $? -gt 0 ]; then
 	echo "Failed to download Flashpoint. See the Flashpoint Wiki for guidance."
 else

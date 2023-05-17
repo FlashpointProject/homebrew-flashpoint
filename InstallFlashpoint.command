@@ -83,7 +83,7 @@ installWine() {
 checkDownload() {
 	cache_path="$(brew --cache -s $repo_path)"
 	if ! [ -e "$cache_path" ]; then
-		curl --progress-bar -o "$cache_path" "$mirror_url"
+		curl --progress-bar -L -o "$cache_path" "$mirror_url"
 		quitIfFailed "Flashpoint"
 	fi
 }
